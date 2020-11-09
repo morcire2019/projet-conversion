@@ -1,0 +1,34 @@
+{
+   "inputFile": "data_text.txt",
+   "references": [
+      {
+         "size": 27,
+         "price": 45.12,
+         "numReference": "1460100040",
+         "type": "R"
+      },
+      {
+         "size": 145,
+         "price": 12,
+         "numReference": "1460900848",
+         "type": "G"
+      },
+      {
+         "size": 19,
+         "price": 5.56,
+         "numReference": "1462100044",
+         "type": "G"
+      },
+      {
+         "size": 97,
+         "price": 105.23,
+         "numReference": "1462100403",
+         "type": "B"
+      }
+   ],
+   "errors": [{
+      "line": 5,
+      "message": "Incorrect value for color",
+      "value": "1462100403;A;100.1;9"
+   }]
+}
