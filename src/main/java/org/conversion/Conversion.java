@@ -286,9 +286,10 @@ public class Conversion {
 
 	public static void main(String[] args) throws IOException {
 
-		String xmlFile = "mettre le chemin de fichier d'entrée";
-		String inputFileName = "mettre le chemin de fichier de sortie";
-		String format = "XML"; // format de sortie du fichier
+		String inputFileName = "mettre le chemin de fichier de d'entrée ici";
+		String xmlFile = "mettre le chemin de fichier sortie ici";
+
+		String format = "XML"; // format de sortie du fichier (XML/JSON)
 
 		// appel de la méthode pour faire la conversion du fichier texte au format (XML/JSON)
 		convertFormatTxtToJsonOrXml(inputFileName, format, xmlFile);
