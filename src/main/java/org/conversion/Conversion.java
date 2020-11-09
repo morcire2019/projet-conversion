@@ -96,24 +96,28 @@ public class Conversion {
 
 				} 
 			}
-
-			System.out.println(file.getName());
-
+			
+			// On vérifie si le format est JSON
 			if(Format.JSON.name().equalsIgnoreCase(outputFormat)) {
 
 				JSONObject object = getJsonObject(list, errors,file.getName());
 
 				//Create and save ouput file
-				createSaveOuputFile(object, outputFilePath);
+				createAndSaveOuputFile(object, outputFilePath);
 
+				// On vérifie si le format est XML
 			} else if(Format.XML.name().equalsIgnoreCase(outputFormat)) {
+				
 				writeDataIntoXmlFile(list, errors, file.getName(),outputFilePath);
 			}	            
 		}
 
 
 	}
-
+    
+	/* Cette fonction permet de lire le fichier d'entrée
+	 * et retourne l'ensemble des lignes sous forme d'une liste de chaînes de caractères
+	 */
 	public static List<String> readTextFileByLines(String fileName) throws IOException {
 		List<String> lines = Files.readAllLines(Paths.get(fileName));
 		return lines;
@@ -243,7 +247,7 @@ public class Conversion {
 	 * @throws IOException  
 	 * 
 	 * */
-	static void createSaveOuputFile(final JSONObject obj, String ouputFileName) throws IOException {
+	static void createAndSaveOuputFile(final JSONObject obj, String ouputFileName) throws IOException {
 
 		// Création du fichier de sortie
 		FileWriter fs = null;
@@ -269,7 +273,6 @@ public class Conversion {
 			try {
 				fs.flush();
 				fs.close();
-				System.out.println("JSONObject :" +obj);
 			} catch (IOException e) {
 				System.err.println("Erreur lors de la fermeture du fichier '" + ouputFileName+"'.");
 				System.err.println(e);
@@ -283,10 +286,11 @@ public class Conversion {
 
 	public static void main(String[] args) throws IOException {
 
-		String xmlFile = "C:\\Users\\KALLO MOHAMED\\Documents\\Downloads\\errors.xml";
-		String inputFileName = "C:\\Users\\KALLO MOHAMED\\Documents\\Downloads\\data_text.txt";
-		String format = "XML";
+		String xmlFile = "mettre le chemin de fichier d'entrée";
+		String inputFileName = "mettre le chemin de fichier de sortie";
+		String format = "XML"; // format de sortie du fichier
 
+		// appel de la méthode pour faire la conversion du fichier texte au format (XML/JSON)
 		convertFormatTxtToJsonOrXml(inputFileName, format, xmlFile);
 	}  
 }  
