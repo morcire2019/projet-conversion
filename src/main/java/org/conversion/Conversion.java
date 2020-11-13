@@ -1,5 +1,7 @@
 package org.conversion;
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -12,7 +14,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.conversion.ReferenceData;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -240,39 +241,23 @@ public class Conversion {
 	 * @throws IOException  
 	 * 
 	 * */
-	static void createAndSaveOuputFile(final JSONObject obj, String ouputFileName) throws IOException {
+	static void createAndSaveOuputFile(final JSONObject jsonObject, String ouputFileName) throws IOException {
+		
+		FileWriter fileWriter = null;
 
-		// Création du fichier de sortie
-		FileWriter fs = null;
+		// writing the JSONObject into a file(ouputFileName)
 		try {
-			fs = new FileWriter(ouputFileName);
-		} catch(IOException e) {
-			System.err.println("Erreur lors de l'ouverture du fichier '" + ouputFileName+ "'.");
-			System.err.println(e);
-			System.exit(-1);
-		}
-
-		// Sauvegarde dans le fichier
-		try {
-			fs.write(obj.toString());
-		} catch(IOException e) {
-			System.err.println("Erreur lors de l'écriture dans le fichier '" + ouputFileName+ "'.");
-			System.err.println(e);
-			System.exit(-1);
-			throw e;
-		}finally {
-
+			fileWriter = new FileWriter(ouputFileName);
+			
+			// save data 
+			fileWriter.write(jsonObject.toString());
+			
 			// Fermeture du fichier
-			try {
-				fs.flush();
-				fs.close();
-			} catch (IOException e) {
-				System.err.println("Erreur lors de la fermeture du fichier '" + ouputFileName+"'.");
-				System.err.println(e);
-				System.exit(-1);
-				throw e;
-			}
-
+			fileWriter.flush();
+			fileWriter.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
