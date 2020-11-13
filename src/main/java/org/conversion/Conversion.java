@@ -33,7 +33,7 @@ public class Conversion {
 	public static void convertFormatTxtToJsonOrXml(String inputFilePath, String outputFormat, String outputFilePath) throws IOException {
 
 		// Test if output file format is valid( XML/JSON);
-		if(!Format.JSON.name().equalsIgnoreCase(outputFormat) && !Format.XML.name().equalsIgnoreCase(outputFormat)) {
+		if(!Format.JSON.toString().equalsIgnoreCase(outputFormat) && !Format.XML.toString().equalsIgnoreCase(outputFormat)) {
 			throw new IllegalArgumentException(Constants.UNKNOWN_OUTPUT_FORMAT);
 		}
 
@@ -43,78 +43,71 @@ public class Conversion {
 		// List of errors
 		final ArrayList<Error> errors = new ArrayList<Error>();
 
-		File file = new File(inputFilePath);
+		// Get all data from input file and get result  as List of String
+		List<String> lines = readTextFileByLines(inputFilePath);
 
-		if(!file.exists()) {
-			throw new FileNotFoundException("The input file not found : "+inputFilePath);
-		}else{
+		if(lines != null && lines.size() > 0) {
+			for(int i = 0; i<lines.size(); i++){
 
-			// Get all data in input file  as List of String
-			List<String> lines = readTextFileByLines(inputFilePath);
+				String[] line = lines.get(i).split(";");
 
-			if(lines != null && lines.size() > 0) {
-				for(int i = 0; i<lines.size(); i++){
-
-					String[] line = lines.get(i).split(";");
-
-					boolean isDigit = ReferenceData.isDigitsNumbers(line[0]);
-					Color color = Color.getColorByCode(line[1]);
-					boolean isPriceNumeric = ReferenceData.isNumeric(line[2]);
-					boolean isSizeNumeric = ReferenceData.isNumeric(line[3]);
+				boolean isDigit = ReferenceData.isDigitsNumbers(line[0]);
+				Color color = Color.getColorByCode(line[1]);
+				boolean isPriceNumeric = ReferenceData.isNumeric(line[2]);
+				boolean isSizeNumeric = ReferenceData.isNumeric(line[3]);
 
 
-					if(isDigit && color !=null && isPriceNumeric && isSizeNumeric) {
+				if(isDigit && color !=null && isPriceNumeric && isSizeNumeric) {
 
-						ReferenceData ref = new ReferenceData();
-						ref.setNumReference(line[0]);
-						ref.setSize(Integer.valueOf(line[3]));
-						ref.setPrice(Double.valueOf(line[2]));
-						ref.setType(color.getCode());
+					ReferenceData ref = new ReferenceData();
+					ref.setNumReference(line[0]);
+					ref.setSize(Integer.valueOf(line[3]));
+					ref.setPrice(Double.valueOf(line[2]));
+					ref.setType(color.getCode());
 
-						// ajouter les données valides dans la liste 
-						list.add(ref);
-					} else {
+					// ajouter les données valides dans la liste 
+					list.add(ref);
+				} else {
 
-						// create Error object
-						Error error = new Error();
+					// create Error object
+					Error error = new Error();
 
-						error.setValue(lines.get(i));
-						error.setLine(++i);
+					error.setValue(lines.get(i));
+					error.setLine(++i);
 
-						if(!isDigit) {
-							error.setMessage(Constants.ERROR_NUM_REFERENCE);
-						} else if (color == null){
-							error.setMessage(Constants.ERROR_TYPE); 
-						} else if(!isPriceNumeric) {
-							error.setMessage(Constants.ERROR_PRICE);
-						}else if(!isSizeNumeric) {
-							error.setMessage(Constants.ERROR_SIZE);
-						}
-						// ajouter les données erronées dans la liste errors
-						errors.add(error);
+					if(!isDigit) {
+						error.setMessage(Constants.ERROR_NUM_REFERENCE);
+					} else if (color == null){
+						error.setMessage(Constants.ERROR_TYPE); 
+					} else if(!isPriceNumeric) {
+						error.setMessage(Constants.ERROR_PRICE);
+					}else if(!isSizeNumeric) {
+						error.setMessage(Constants.ERROR_SIZE);
 					}
+					// ajouter les données erronées dans la liste errors
+					errors.add(error);
+				}
 
-				} 
-			}
-			
-			// On vérifie si le format est JSON
-			if(Format.JSON.name().equalsIgnoreCase(outputFormat)) {
-
-				JSONObject object = getJsonObject(list, errors,file.getName());
-
-				//Create and save ouput file
-				createAndSaveOuputFile(object, outputFilePath);
-
-				// On vérifie si le format est XML
-			} else if(Format.XML.name().equalsIgnoreCase(outputFormat)) {
-				
-				writeDataIntoXmlFile(list, errors, file.getName(),outputFilePath);
-			}	            
+			} 
 		}
+
+		// On vérifie si le format est JSON
+		if(Format.JSON.name().equalsIgnoreCase(outputFormat)) {
+
+			JSONObject object = getJsonObject(list, errors, inputFilePath);
+
+			//Create and save ouput file
+			createAndSaveOuputFile(object, outputFilePath);
+
+			// On vérifie si le format est XML
+		} else if(Format.XML.name().equalsIgnoreCase(outputFormat)) {
+
+			writeDataIntoXmlFile(list, errors, inputFilePath,outputFilePath);
+		}	            
 
 
 	}
-    
+
 	/* Cette fonction permet de lire le fichier d'entrée
 	 * et retourne l'ensemble des lignes sous forme d'une liste de chaînes de caractères
 	 */
@@ -286,7 +279,7 @@ public class Conversion {
 
 	public static void main(String[] args) throws IOException {
 
-		String inputFileName = "mettre le chemin de fichier de d'entrée ici";
+		String inputFileName = "mettre le chemin de fichier d'entrée ici";
 		String xmlFile = "mettre le chemin de fichier sortie ici";
 
 		String format = "XML"; // format de sortie du fichier (XML/JSON)

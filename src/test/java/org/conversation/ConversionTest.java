@@ -1,6 +1,7 @@
 package org.conversation;
 
 import java.io.FileNotFoundException;
+import java.nio.file.NoSuchFileException;
 
 import org.conversion.Conversion;
 import org.junit.jupiter.api.Assertions;
@@ -38,7 +39,7 @@ public class ConversionTest {
 		 String inputFilePath = "chemin du fichier d'entrée";
 		 String outputFilePath = "chemin du fichier de sortie";
 		 
-		 Assertions.assertThrows(FileNotFoundException.class, () -> {
+		 Assertions.assertThrows(NoSuchFileException.class, () -> {
 		    	Conversion.convertFormatTxtToJsonOrXml(inputFilePath, OutPutFileFormat, outputFilePath)
 		      ;
 		    });
